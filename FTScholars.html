@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FT Scholars Program: Developing Partnerships for Project Scale</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Sophisticated Neutral -->
+    <!-- Application Structure Plan: A thematic, single-page narrative dashboard. The flow guides users from the high-level vision to the detailed execution plan (Value Prop -> Strategy -> Partners -> Playbook -> KPIs). This structure was chosen to make the proposal more engaging and digestible than a linear document. Key interactions include tabs for the value proposition, a dynamic comparison chart for partners, and a clickable timeline for the engagement model, which breaks down complex information into manageable, interactive chunks. -->
+    <!-- Visualization & Content Choices:
+    - Value Prop: Report Info -> 3 value pillars. Goal -> Inform. Method -> Tabbed text blocks. Interaction -> Click/toggle. Justification -> Reduces initial clutter, encourages user interaction. Method -> HTML/CSS/JS.
+    - Partner Comparison: Report Info -> NJ LEEP vs SEEDS stats. Goal -> Compare. Method -> Infographic cards. Interaction -> Static visual comparison. Justification -> More direct and impactful for key stats than a chart. Method -> HTML/Tailwind.
+    - Engagement Model: Report Info -> 3-phase plan. Goal -> Explain Process. Method -> Clickable step-by-step diagram. Interaction -> Click to reveal details. Justification -> Simplifies a multi-step process into a clear, interactive flow. Method -> HTML/CSS/JS.
+    - KPIs: Report Info -> Success metrics. Goal -> Inform/Impact. Method -> Animated number counters. Interaction -> Animate on scroll. Justification -> Creates a dynamic, dashboard-like feel and highlights key targets. Method -> JS Intersection Observer.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background-color: #FDFBF7;
+            color: #333333;
+        }
+        h1, h2, h3 {
+            font-family: 'Merriweather', serif;
+        }
+        .nav-link {
+            position: relative;
+            transition: color 0.3s;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #C1A36A;
+            transition: width 0.3s;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+        .tab-btn.active {
+            background-color: #C1A36A;
+            color: #FFFFFF;
+        }
+        .phase.active {
+            border-color: #C1A36A;
+            transform: translateY(-5px);
+        }
+        .kpi-card {
+            background: white;
+            border-left: 4px solid #C1A36A;
+        }
+        .infographic-stat {
+            background-color: #f9fafb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold font-serif text-gray-800">
+                FT Scholars
+            </div>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#vision" class="nav-link text-gray-600 hover:text-gray-900">Vision</a>
+                <a href="#strategy" class="nav-link text-gray-600 hover:text-gray-900">Strategy</a>
+                <a href="#partners" class="nav-link text-gray-600 hover:text-gray-900">Partners</a>
+                <a href="#playbook" class="nav-link text-gray-600 hover:text-gray-900">Playbook</a>
+                <a href="#success" class="nav-link text-gray-600 hover:text-gray-900">Success</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero" class="py-20 md:py-32 bg-white">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-6xl font-bold text-gray-800 leading-tight">New York Metro Expansion</h1>
+                <p class="mt-4 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">A strategic proposal to build brand affinity with the next generation of global leaders by integrating the Financial Times into the academic DNA of the region.</p>
+            </div>
+        </section>
+
+        <section id="vision" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800">The Value Proposition</h2>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">A symbiotic partnership creating distinct value for students, educators, and the Financial Times.</p>
+                </div>
+                
+                <div id="value-tabs-container" class="max-w-4xl mx-auto">
+                    <div class="flex justify-center border-b border-gray-200 mb-8">
+                        <button data-tab="students" class="tab-btn px-6 py-3 font-semibold text-gray-600 focus:outline-none transition-colors duration-300">For Students</button>
+                        <button data-tab="educators" class="tab-btn px-6 py-3 font-semibold text-gray-600 focus:outline-none transition-colors duration-300">For Educators</button>
+                        <button data-tab="ft" class="tab-btn px-6 py-3 font-semibold text-gray-600 focus:outline-none transition-colors duration-300">For The FT</button>
+                    </div>
+
+                    <div id="value-content" class="bg-white p-8 rounded-lg shadow-md transition-all duration-500">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="strategy" class="py-16 md:py-24 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800">A Tiered Partnership Strategy</h2>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Our approach focuses on deep impact with foundational partners while building a pipeline for future growth.</p>
+                </div>
+                <div class="max-w-4xl mx-auto flex flex-col md:flex-row justify-center items-center gap-8 text-center">
+                    <div class="bg-white p-8 rounded-lg shadow-lg border-t-4 border-amber-500 w-full md:w-1/2">
+                        <h3 class="text-2xl font-bold text-gray-800">Tier 1</h3>
+                        <p class="mt-2 font-semibold text-amber-600">The Foundation for Deep Impact</p>
+                        <p class="mt-4 text-gray-600">Top-priority launch partners with missions directly aligned to academic rigor and college preparation for high-achieving, low-income students.</p>
+                    </div>
+                    <div class="text-4xl text-gray-300 font-thin hidden md:block">&rarr;</div>
+                    <div class="text-4xl text-gray-300 font-thin md:hidden">&darr;</div>
+                    <div class="bg-white p-8 rounded-lg shadow-lg border-t-4 border-gray-400 w-full md:w-1/2">
+                        <h3 class="text-2xl font-bold text-gray-800">Tier 2</h3>
+                        <p class="mt-2 font-semibold text-gray-500">Catalysts for Career Content</p>
+                        <p class="mt-4 text-gray-600">Organizations with direct thematic links to business, finance, and career development, offering opportunities for scale and specialized workshops.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="partners" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Meet Our Tier 1 Launch Partners</h2>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Two exceptional organizations with proven track records of transforming student lives in New Jersey.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto mb-12">
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-gray-800">NJ LEEP</h3>
+                        <p class="text-sm font-semibold text-gray-500 mt-1">Law and Education Empowerment Project</p>
+                        <p class="mt-4 text-gray-600">Empowers first-generation and low-income students from the greater Newark area, guiding them from middle school through college graduation with a focus on skills, habits, and exposure.</p>
+                        <p class="mt-4 text-sm font-bold text-amber-600">Strategic Value: An Opportunity to partner with a proven organization that supports FT Scholars student profile.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-gray-800">SEEDS</h3>
+                        <p class="text-sm font-semibold text-gray-500 mt-1">Access Changes Everything</p>
+                        <p class="mt-4 text-gray-600">Prepares and places motivated, high-achieving students from low-income households into elite selective schools and universities with substantial financial aid.</p>
+                        <p class="mt-4 text-sm font-bold text-amber-600">Strategic Value: Prestigious brand alignment, positioning the FT as an essential tool for elite academic environments.</p>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold text-center text-gray-800 mb-8">Partner Outcomes at a Glance</h3>
+                    <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                        
+                        <div class="text-center">
+                             <h4 class="text-xl font-bold text-gray-700 mb-4">NJ LEEP</h4>
+                             <div class="infographic-stat">
+                                <p class="text-5xl font-bold text-amber-600">100%</p>
+                                <p class="text-gray-600 mt-1">High School Graduation</p>
+                             </div>
+                             <div class="infographic-stat">
+                                <p class="text-5xl font-bold text-amber-600">99%</p>
+                                <p class="text-gray-600 mt-1">College Enrollment</p>
+                             </div>
+                             <div class="infographic-stat">
+                                <p class="text-5xl font-bold text-amber-600">74%</p>
+                                <p class="text-gray-600 mt-1">Earned College Degree within 6 Years</p>
+                             </div>
+                        </div>
+
+                        <div class="text-center">
+                             <h4 class="text-xl font-bold text-gray-700 mb-4">SEEDS</h4>
+                             <div class="infographic-stat">
+                                <div class="flex justify-center items-center gap-4">
+                                    <div>
+                                        <p class="text-5xl font-bold text-amber-600">98%</p>
+                                        <p class="text-gray-600 mt-1">SEEDS Scholars Attend College</p>
+                                    </div>
+                                    <p class="text-2xl font-bold text-gray-400">vs</p>
+                                    <div>
+                                        <p class="text-5xl font-bold text-gray-500">29%</p>
+                                        <p class="text-gray-600 mt-1">Low-Income Students Nationwide</p>
+                                    </div>
+                                </div>
+                             </div>
+                             <div class="infographic-stat">
+                                <p class="text-5xl font-bold text-amber-600">100%</p>
+                                <p class="text-gray-600 mt-1">Matriculated to "Most" or "Highly Competitive" Universities (2021)</p>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="playbook" class="py-16 md:py-24 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800">The Teacher Engagement Playbook</h2>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">A three-phase model to build authentic relationships and scale impact, transforming teachers from recipients to co-creators.</p>
+                </div>
+                <div class="max-w-6xl mx-auto">
+                    <div class="flex flex-col md:flex-row justify-center items-start gap-4 md:gap-8 mb-8">
+                        <div data-phase="1" class="phase-btn flex-1 text-center p-4 cursor-pointer">
+                            <h4 class="text-xl font-bold">Phase 1: Outreach</h4>
+                            <p class="text-sm text-gray-500">Identifying the Innovators</p>
+                        </div>
+                        <div data-phase="2" class="phase-btn flex-1 text-center p-4 cursor-pointer">
+                            <h4 class="text-xl font-bold">Phase 2: Pilot</h4>
+                            <p class="text-sm text-gray-500">The Co-Creation Catalyst</p>
+                        </div>
+                        <div data-phase="3" class="phase-btn flex-1 text-center p-4 cursor-pointer">
+                            <h4 class="text-xl font-bold">Phase 3: Scaling</h4>
+                            <p class="text-sm text-gray-500">From Pilot to Program</p>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <div id="phase-content-container" class="bg-white p-8 rounded-lg shadow-md transition-all duration-500 min-h-[250px]">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="success" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Measuring Success</h2>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Key Performance Indicators to track our progress and ensure accountability.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto text-center">
+                    <div class="kpi-card p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-bold text-gray-700">Partnership Metrics</h3>
+                        <p class="text-5xl font-bold text-amber-600 my-4 kpi-value" data-target="2">0</p>
+                        <p class="text-gray-600">Tier 1 organizations formally partnered within the first year.</p>
+                    </div>
+                    <div class="kpi-card p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-bold text-gray-700">Teacher Engagement</h3>
+                        <p class="text-5xl font-bold text-amber-600 my-4 kpi-value" data-target="15">0</p>
+                        <p class="text-gray-600">Educators recruited into the Co-Creation Collaborative.</p>
+                    </div>
+                    <div class="kpi-card p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-bold text-gray-700">Student Reach</h3>
+                        <p class="text-5xl font-bold text-amber-600 my-4 kpi-value" data-target="500">0</p>
+                        <p class="text-gray-600">Students directly engaged through pilots in Year 1.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2025 Brian McManus. All Rights Reserved.</p>
+            <p class="text-sm text-gray-400 mt-2">FT Scholars Program Proposal</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const valueTabsData = {
+                students: {
+                    title: 'Empowering Student Success',
+                    points: [
+                        '<strong>Enhanced Relevance:</strong> Gain access to a world-class newsroom whose deep, contextual reporting makes AP courses instantly more relevant.',
+                        '<strong>Skill Development:</strong> Develop crucial critical thinking skills by analyzing, deciphering, and synthesizing real-world events and data.',
+                        '<strong>Academic Achievement:</strong> Engage with core curricular content through the lens of real-world examples, providing context to support excellence.'
+                    ]
+                },
+                educators: {
+                    title: 'Supporting Excellence in Teaching',
+                    points: [
+                        '<strong>High-Quality Resources:</strong> A free, timely, and credible content stream aligned with state and AP standards, serving as ready-made case studies and data sets.',
+                        '<strong>Collaborative Support:</strong> An FT representative works directly with teachers to identify logical entry points, ensuring seamless integration with no extra burden.'
+                    ]
+                },
+                ft: {
+                    title: 'Building a Strategic Audience',
+                    points: [
+                        '<strong>Early Brand Loyalty:</strong> Cultivate loyalty among students who use the FT to understand the world, making them more likely to subscribe later in life.',
+                        '<strong>Long-Term Investment:</strong> This is more than outreach; it’s a strategic initiative to develop the FT’s future core audience.'
+                    ]
+                }
+            };
+
+            const phaseData = {
+                1: {
+                    title: 'Phase 1: Intelligence and Outreach',
+                    description: 'The first step is to engage "early adopter" AP teachers most likely to embrace a pilot, investing resources where they can yield the greatest return.',
+                    tactics: [
+                        '<strong>Data-Driven Prospecting:</strong> Use public data to identify high schools with strong relevant AP programs.',
+                        '<strong>Leverage Partner Networks:</strong> Utilize warm introductions from Tier 1 partners to build immediate trust.',
+                        '<strong>Value-First Communication:</strong> Frame outreach as an exclusive invitation to a collaborative fellowship.'
+                    ]
+                },
+                2: {
+                    title: 'Phase 2: The Co-Creation Pilot',
+                    description: 'Once engaged, teachers enter a structured pilot designed to demonstrate impact, build trust, and refine the model for scale.',
+                    tactics: [
+                        '<strong>Needs Assessment:</strong> Collaboratively identify curriculum pain points where FT content can provide a direct solution.',
+                        '<strong>Collaborative Curriculum Design:</strong> Co-create mini-units, case studies, or data analysis activities.',
+                        '<strong>Modeling & Support:</strong> Provide curated content, lesson plans, and co-teach to model effective implementation.'
+                    ]
+                },
+                3: {
+                    title: 'Phase 3: Amplification and Scaling',
+                    description: 'The final phase focuses on turning isolated pilot successes into sustained, school- or district-wide adoption.',
+                    tactics: [
+                        '<strong>Showcasing Success:</strong> Create case studies and video testimonials to demonstrate value.',
+                        '<strong>Peer-to-Peer Advocacy:</strong> Empower pilot teachers to share their experiences with colleagues.',
+                        '<strong>Building a Community of Practice:</strong> Create a network for teachers to share best practices.',
+                        '<strong>Formalizing Partnerships:</strong> Approach leadership to make FT Scholars an official partner.'
+                    ]
+                }
+            };
+
+            const valueTabsContainer = document.getElementById('value-tabs-container');
+            const valueContent = document.getElementById('value-content');
+            const tabButtons = valueTabsContainer.querySelectorAll('.tab-btn');
+
+            function updateValueContent(tab) {
+                const data = valueTabsData[tab];
+                valueContent.innerHTML = `
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">${data.title}</h3>
+                    <ul class="space-y-3 text-gray-600 list-disc list-inside">
+                        ${data.points.map(point => `<li>${point}</li>`).join('')}
+                    </ul>
+                `;
+                tabButtons.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.tab === tab);
+                });
+            }
+
+            valueTabsContainer.addEventListener('click', (e) => {
+                if (e.target.matches('.tab-btn')) {
+                    updateValueContent(e.target.dataset.tab);
+                }
+            });
+
+            updateValueContent('students');
+
+            const phaseBtns = document.querySelectorAll('.phase-btn');
+            const phaseContentContainer = document.getElementById('phase-content-container');
+
+            function updatePhaseContent(phase) {
+                const data = phaseData[phase];
+                phaseContentContainer.innerHTML = `
+                    <h3 class="text-2xl font-bold text-gray-800">${data.title}</h3>
+                    <p class="mt-2 mb-6 text-gray-600">${data.description}</p>
+                    <ul class="space-y-2 text-gray-600">
+                        ${data.tactics.map(tactic => `<li class="flex items-start"><span class="text-amber-500 mr-2 mt-1">&#10003;</span><span>${tactic}</span></li>`).join('')}
+                    </ul>
+                `;
+                 phaseBtns.forEach(btn => {
+                    if (btn.parentElement.dataset.phase === phase || btn.dataset.phase === phase) {
+                        btn.classList.add('border-b-4', 'border-amber-500');
+                    } else {
+                        btn.classList.remove('border-b-4', 'border-amber-500');
+                    }
+                });
+            }
+            
+            phaseBtns.forEach(btn => {
+                btn.addEventListener('click', () => updatePhaseContent(btn.dataset.phase));
+            });
+
+            updatePhaseContent('1');
+
+            const kpiValues = document.querySelectorAll('.kpi-value');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target;
+                        const target = +el.dataset.target;
+                        let current = 0;
+                        const increment = target / 100;
+
+                        const timer = setInterval(() => {
+                            current += increment;
+                            if (current >= target) {
+                                clearInterval(timer);
+                                el.textContent = target;
+                            } else {
+                                el.textContent = Math.ceil(current);
+                            }
+                        }, 20);
+                        observer.unobserve(el);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            kpiValues.forEach(el => {
+                observer.observe(el);
+            });
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 60) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
